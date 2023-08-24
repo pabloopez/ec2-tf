@@ -6,10 +6,6 @@ resource "aws_s3_bucket" "s3_bucket" {
   }
 }
 
-resource "aws_s3_bucket_acl" "project" {
-  bucket = aws_s3_bucket.s3_bucket.id
-  acl    = var.acl
-}
 resource "aws_s3_bucket_object" "object" {
   bucket = aws_s3_bucket.s3_bucket.bucket
   key    = var.object_key

@@ -41,7 +41,6 @@ module "iam" {
 module "s3" {
   source        = "./module/s3"
   bucket_name   = "pablete123412341234"
-  acl           = "private"
   object_key    = "LUIT"
   object_source = "/dev/null"
 }
