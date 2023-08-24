@@ -13,13 +13,6 @@ provider "aws" {
   region = "us-east-1"
 }
 
-module "key_pair" {
-  source = "terraform-aws-modules/key-pair/aws"
-
-  key_name           = "my_ssh_key"
-  create_private_key = true
-}
-
 module "compute" {
   source               = "./module/compute"
   ami                  = "ami-06db4d78cb1d3bbf9"
@@ -28,7 +21,7 @@ module "compute" {
   sg                   = module.security.webserver_sg
   user_data            = file("./userdata.tpl")
   iam_instance_profile = module.iam.s3_profile
-  public_key_path      = "/root/.ssh/id_rsa"
+  public_key_path      = "/root/.ssh/id_rsa.pub"
 }
 
 module "security" {
@@ -47,7 +40,7 @@ module "iam" {
 }
 module "s3" {
   source        = "./module/s3"
-  bucket_name   = "devinslevelupintechbucket0223"
+  bucket_name   = "pablete123412341234"
   acl           = "private"
   object_key    = "LUIT"
   object_source = "/dev/null"
