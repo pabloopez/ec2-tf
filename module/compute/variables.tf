@@ -18,3 +18,7 @@ variable "user_data" {
 variable "iam_instance_profile" {
   description = "iam instance profile for the ec2 instance"
 }
+
+variable "public_key_path" {
+  description = "Path to the public SSH key"
+}

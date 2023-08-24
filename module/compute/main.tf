@@ -5,15 +5,13 @@ resource "aws_instance" "app_server" {
   vpc_security_group_ids = [var.sg]
   user_data              = var.user_data
   iam_instance_profile   = var.iam_instance_profile
-  key_name               = module.key_pair.key_name
+  key_name = "my-ec2-key"
   tags = {
     Name = "${var.tag_name}instance"
   }
 }
 
-module "key_pair" {
-  source = "terraform-aws-modules/key-pair/aws"
-
-  key_name           = "my_ssh_key"
-  create_private_key = true
+resource "aws_key_pair" "my_ec2_key" {
+  key_name   = "my-ec2-key"  # The same key_name you used in the instance resource
+  public_key = file(var.public_key_path)
 }

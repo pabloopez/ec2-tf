@@ -13,7 +13,12 @@ provider "aws" {
   region = "us-east-1"
 }
 
+module "key_pair" {
+  source = "terraform-aws-modules/key-pair/aws"
 
+  key_name           = "my_ssh_key"
+  create_private_key = true
+}
 
 module "compute" {
   source               = "./module/compute"
@@ -23,6 +28,7 @@ module "compute" {
   sg                   = module.security.webserver_sg
   user_data            = file("./userdata.tpl")
   iam_instance_profile = module.iam.s3_profile
+  public_key_path      = "/root/.ssh/id_rsa"
 }
 
 module "security" {
