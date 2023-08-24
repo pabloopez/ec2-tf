@@ -13,12 +13,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
-module "key_pair" {
-  source = "terraform-aws-modules/key-pair/aws"
 
-  key_name           = "my_ssh_key"
-  create_private_key = true
-}
 
 module "compute" {
   source               = "./module/compute"
