@@ -10,14 +10,21 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-west-2"
+  region = "us-east-1"
+}
+
+module "key_pair" {
+  source = "terraform-aws-modules/key-pair/aws"
+
+  key_name           = "my_ssh_key"
+  create_private_key = true
 }
 
 module "compute" {
   source               = "./module/compute"
   ami                  = "ami-06db4d78cb1d3bbf9"
   instance_type        = "m4.xlarge"
-  tag_name             = "ExampleAppServerInstance"
+  tag_name             = "my_host"
   sg                   = module.security.webserver_sg
   user_data            = file("./userdata.tpl")
   iam_instance_profile = module.iam.s3_profile

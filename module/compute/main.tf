@@ -10,6 +10,7 @@ resource "aws_instance" "app_server" {
     Name = "${var.tag_name}instance"
   }
 }
+
 data "aws_key_pair" "ssh_key" {
-  key_name = "my_ssh_key"
+  key_name   = "my_ssh_key"
 }
