@@ -37,8 +37,20 @@ module "iam" {
   iam_policy_description = "s3 policy for ec2 to list role"
   # iam_policy             = templatefile("file.tpl", { SOMEVAR = var.your_terraform_variable})
   iam_policy             = file("./s3-list-bucket-policy.tpl")
-  assume_role_policy     = file("./s3-list-bucket-trusted-identity.tpl")
+  assume_role_policy     = file("./ec2-trusted-id.tpl")
 }
+
+module "iam" {
+  source                 = "./module/iam"
+  role_name              = "admin-read1"
+  policy_name            = "admin-read1"
+  instance_profile_name  = "admin-read1"
+  path                   = "/"
+  iam_policy_description = "read access for admin users"
+  iam_policy             = templatefile("plc-admin-read1-policy.tpl", { AWS_ACCOUNT_ID = var.AWS_ACCOUNT_ID})
+  assume_role_policy     = file("./ec2-trusted-id.tpl")
+}
+
 module "s3" {
   source        = "./module/s3"
   bucket_name   = "tf-state-"
