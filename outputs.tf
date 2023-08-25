@@ -1,10 +1,10 @@
 #------ root/outputs
 
-output "public_ip" {
+output "ec2-public_ip" {
   value = module.compute.public_ip
 }
 
-output "id" {
+output "ec2-id" {
   value = module.compute.id
 }
 

@@ -19,7 +19,7 @@ module "compute" {
   instance_type        = "m4.xlarge"
   tag_name             = "my_host"
   sg                   = module.security.webserver_sg
-  user_data            = file("./userdata.tpl")
+  user_data            = file("./scripts/userdata.tpl")
   iam_instance_profile = module.iam.s3_profile
   public_key_path      = "~/.ssh/my_sshkey.pub"
 }
@@ -39,7 +39,7 @@ module "iam" {
   assume_role_policy     = file("./policy/ec2-trusted-id.tpl")
 }
 
-module "iam" {
+module "iam-admin" {
   source                 = "./module/iam"
   role_name              = "admin-read1"
   policy_name            = "admin-read1"
