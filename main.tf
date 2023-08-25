@@ -21,7 +21,7 @@ module "compute" {
   sg                   = module.security.webserver_sg
   user_data            = file("./userdata.tpl")
   iam_instance_profile = module.iam.s3_profile
-  public_key_path      = "/root/.ssh/id_rsa.pub"
+  public_key_path      = "~/.ssh/my_sshkey.pub"
 }
 
 module "security" {
@@ -40,7 +40,7 @@ module "iam" {
 }
 module "s3" {
   source        = "./module/s3"
-  bucket_name   = "pablete123412341234"
+  bucket_name   = "tf-state-"
   object_key    = "LUIT"
   object_source = "/dev/null"
 }
