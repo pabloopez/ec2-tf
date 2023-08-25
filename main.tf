@@ -30,8 +30,8 @@ module "security" {
 
 module "iam" {
   source                 = "./module/iam"
-  role_name              = "s3-list-bucket"
-  instance_profile_name  = "s3-list-bucket"
+  role_name              = "ec2-role"
+  instance_profile_name  = "ec2-instance-profile"
   assume_role_policy     = file("./policy/ec2-trusted-id.tpl")
 
   plc1_policy_name            = "users-and-keys"
@@ -48,17 +48,6 @@ module "iam" {
   plc3_path                   = "/"
   plc3_iam_policy_description = "read2 access for admin users"
   plc3_iam_policy             = templatefile("./policy/plc-admin-read2-policy.tpl", { AWS_ACCOUNT_ID = var.AWS_ACCOUNT_ID})
-}
-
-module "iam-admin" {
-  source                 = "./module/iam"
-  role_name              = "admin-read1"
-  instance_profile_name  = "admin-read1"
-  policy_name            = "admin-read1"
-  path                   = "/"
-  iam_policy_description = "read access for admin users"
-  iam_policy             = templatefile("./policy/plc-admin-read1-policy.tpl", { AWS_ACCOUNT_ID = var.AWS_ACCOUNT_ID})
-  assume_role_policy     = file("./policy/ec2-trusted-id.tpl")
 }
 
 module "s3" {
