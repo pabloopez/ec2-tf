@@ -1,16 +1,17 @@
 # --- modules/security/main.tf
 
 resource "aws_security_group" "webserver_sg" {
-  name        = "HTTP Access via ALB"
-  description = "Allow HTTP inbound traffic via ALB, and SSH traffic via bastion host"
+  name        = "ec2-sc"
+  description = "accesing the host"
 
 
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 8888
+    to_port     = 8888
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   ingress {
     from_port   = 22
     to_port     = 22
