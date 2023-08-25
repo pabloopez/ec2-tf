@@ -31,17 +31,17 @@ resource "aws_iam_policy" "admin_policy_3" {
 
 resource "aws_iam_role_policy_attachment" "attachment_policy_1" {
   role       = aws_iam_role.s3_role.name
-  policy_arn = aws_iam_policy.s3_policy.arn
+  policy_arn = aws_iam_policy.admin_policy_1.arn
 }
 
 resource "aws_iam_role_policy_attachment" "attachment_policy_2" {
   role       = aws_iam_role.s3_role.name
-  policy_arn = aws_iam_policy.s3_policy.arn
+  policy_arn = aws_iam_policy.admin_policy_2.arn
 }
 
 resource "aws_iam_role_policy_attachment" "attachment_policy_3" {
   role       = aws_iam_role.s3_role.name
-  policy_arn = aws_iam_policy.s3_policy.arn
+  policy_arn = aws_iam_policy.admin_policy_3.arn
 }
 
 
