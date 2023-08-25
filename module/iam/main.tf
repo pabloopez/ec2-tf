@@ -49,3 +49,27 @@ resource "aws_iam_instance_profile" "s3_profile" {
   name = var.instance_profile_name
   role = aws_iam_role.s3_role.name
 }
+
+
+resource "aws_iam_user" "admins" {
+  count = var.total_admins
+  name = "admin${count.index}"
+}
+
+# resource "aws_iam_user_policy_attachment" "vanilla_admin_attach" {
+
+#   for_each = local.aws_iam_user.admins
+
+#   user       = each.key
+#   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+# }
+
+
+resource "aws_iam_user" "user" {
+  name = "Admin6"
+}
+
+resource "aws_iam_user_policy_attachment" "attach-user" {
+  user       = aws_iam_user.user.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}

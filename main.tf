@@ -48,6 +48,9 @@ module "iam" {
   plc3_path                   = "/"
   plc3_iam_policy_description = "read2 access for admin users"
   plc3_iam_policy             = templatefile("./policy/plc-admin-read2-policy.tpl", { AWS_ACCOUNT_ID = var.AWS_ACCOUNT_ID})
+
+  # users
+  total_admins  = 5
 }
 
 module "s3" {

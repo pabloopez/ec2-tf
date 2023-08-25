@@ -58,3 +58,7 @@ variable "instance_profile_name" {
 variable "assume_role_policy" {
 
 }
+
+variable "total_admins" {
+    
+}
