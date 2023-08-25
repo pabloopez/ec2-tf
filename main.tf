@@ -35,9 +35,8 @@ module "iam" {
   instance_profile_name  = "s3-list-bucket"
   path                   = "/"
   iam_policy_description = "s3 policy for ec2 to list role"
-  # iam_policy             = templatefile("file.tpl", { SOMEVAR = var.your_terraform_variable})
-  iam_policy             = file("./s3-list-bucket-policy.tpl")
-  assume_role_policy     = file("./ec2-trusted-id.tpl")
+  iam_policy             = file("./policy/s3-list-bucket-policy.tpl")
+  assume_role_policy     = file("./policy/ec2-trusted-id.tpl")
 }
 
 module "iam" {
@@ -48,7 +47,7 @@ module "iam" {
   path                   = "/"
   iam_policy_description = "read access for admin users"
   iam_policy             = templatefile("plc-admin-read1-policy.tpl", { AWS_ACCOUNT_ID = var.AWS_ACCOUNT_ID})
-  assume_role_policy     = file("./ec2-trusted-id.tpl")
+  assume_role_policy     = file("./policy/ec2-trusted-id.tpl")
 }
 
 module "s3" {
@@ -57,6 +56,3 @@ module "s3" {
   object_key    = "LUIT"
   object_source = "/dev/null"
 }
-
-# we need to run:
-# ssh-keygen -t rsa -b 4096
