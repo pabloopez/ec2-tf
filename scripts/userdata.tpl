@@ -15,4 +15,20 @@ mkdir $DIR
 wget https://raw.githubusercontent.com/vulhub/vulhub/master/jupyter/notebook-rce/docker-compose.yml -P $DIR
 docker compose -f $DIR/docker-compose.yml up -d
 
+
+# agent
+sudo docker run -d --name sysdig-agent --restart always --privileged --net host --pid host \
+    -e ACCESS_KEY \
+    -e COLLECTOR=ingest-us2.app.sysdig.com \
+    -e SECURE=true \
+    -v /var/run/docker.sock:/host/var/run/docker.sock \
+    -v /dev:/host/dev \
+    -v /proc:/host/proc:ro \
+    -v /boot:/host/boot:ro \
+    -v /lib/modules:/host/lib/modules:ro \
+    -v /usr:/host/usr:ro \
+    -v /etc:/host/etc:ro \
+    --shm-size=512m \
+    quay.io/sysdig/agent
+
 touch DONE
