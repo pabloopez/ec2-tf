@@ -56,6 +56,7 @@ resource "aws_iam_user" "admins" {
   name = "admin${count.index}"
 }
 
+# TODO attach policy to normal admins
 # resource "aws_iam_user_policy_attachment" "vanilla_admin_attach" {
 
 #   for_each = local.aws_iam_user.admins
