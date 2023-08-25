@@ -37,7 +37,7 @@ module "iam" {
   plc1_policy_name            = "users-and-keys"
   plc1_path                   = "/"
   plc1_iam_policy_description = "creating access keys, limited"
-  plc1_iam_policy             = templatefile("./policy/plc-useres-and-keys.tpl", { AWS_ACCOUNT_ID = var.AWS_ACCOUNT_ID})
+  plc1_iam_policy             = templatefile("./policy/plc-users-and-keys-policy.tpl", { AWS_ACCOUNT_ID = var.AWS_ACCOUNT_ID})
 
   plc2_policy_name            = "admin-read1"
   plc2_path                   = "/"
