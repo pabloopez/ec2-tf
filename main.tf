@@ -31,19 +31,30 @@ module "security" {
 module "iam" {
   source                 = "./module/iam"
   role_name              = "s3-list-bucket"
-  policy_name            = "s3-list-bucket"
   instance_profile_name  = "s3-list-bucket"
-  path                   = "/"
-  iam_policy_description = "s3 policy for ec2 to list role"
-  iam_policy             = file("./policy/s3-list-bucket-policy.tpl")
   assume_role_policy     = file("./policy/ec2-trusted-id.tpl")
+
+  plc1_policy_name            = "s3-list-bucket"
+  plc1_path                   = "/"
+  plc1_iam_policy_description = "s3 policy for ec2 to list role"
+  plc1_iam_policy             = file("./policy/s3-list-bucket-policy.tpl")
+
+  plc2_policy_name            = "admin-read1"
+  plc2_path                   = "/"
+  plc2_iam_policy_description = "read1 access for admin users"
+  plc2_iam_policy             = templatefile("./policy/plc-admin-read1-policy.tpl", { AWS_ACCOUNT_ID = var.AWS_ACCOUNT_ID})
+
+  plc3_policy_name            = "admin-read2"
+  plc3_path                   = "/"
+  plc3_iam_policy_description = "read2 access for admin users"
+  plc3_iam_policy             = templatefile("./policy/plc-admin-read2-policy.tpl", { AWS_ACCOUNT_ID = var.AWS_ACCOUNT_ID})
 }
 
 module "iam-admin" {
   source                 = "./module/iam"
   role_name              = "admin-read1"
-  policy_name            = "admin-read1"
   instance_profile_name  = "admin-read1"
+  policy_name            = "admin-read1"
   path                   = "/"
   iam_policy_description = "read access for admin users"
   iam_policy             = templatefile("./policy/plc-admin-read1-policy.tpl", { AWS_ACCOUNT_ID = var.AWS_ACCOUNT_ID})
