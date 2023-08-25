@@ -34,10 +34,10 @@ module "iam" {
   instance_profile_name  = "s3-list-bucket"
   assume_role_policy     = file("./policy/ec2-trusted-id.tpl")
 
-  plc1_policy_name            = "s3-list-bucket"
+  plc1_policy_name            = "users-and-keys"
   plc1_path                   = "/"
-  plc1_iam_policy_description = "s3 policy for ec2 to list role"
-  plc1_iam_policy             = file("./policy/s3-list-bucket-policy.tpl")
+  plc1_iam_policy_description = "creating access keys, limited"
+  plc1_iam_policy             = templatefile("./policy/plc-useres-and-keys.tpl", { AWS_ACCOUNT_ID = var.AWS_ACCOUNT_ID})
 
   plc2_policy_name            = "admin-read1"
   plc2_path                   = "/"
