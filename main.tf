@@ -46,7 +46,7 @@ module "iam-admin" {
   instance_profile_name  = "admin-read1"
   path                   = "/"
   iam_policy_description = "read access for admin users"
-  iam_policy             = templatefile("plc-admin-read1-policy.tpl", { AWS_ACCOUNT_ID = var.AWS_ACCOUNT_ID})
+  iam_policy             = templatefile("./policy/plc-admin-read1-policy.tpl", { AWS_ACCOUNT_ID = var.AWS_ACCOUNT_ID})
   assume_role_policy     = file("./policy/ec2-trusted-id.tpl")
 }
 
