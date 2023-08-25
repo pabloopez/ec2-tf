@@ -5,6 +5,6 @@ output "ec2-public_ip" {
 }
 
 output "ec2-id" {
-  value = module.compute.id
+  value = module.compute.instance_id
 }
 
