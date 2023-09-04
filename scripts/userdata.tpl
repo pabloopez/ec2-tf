@@ -1,10 +1,11 @@
 #!/bin/bash
-sudo apt update -y
-
+sudo apt -y update && sudo apt -y upgrade 
 # (if we want, at this step is where we need to setup the ec2 hosts as k8s nodes)
 
 #setup machine with docker + compose
+cd /home/admin/
 curl -fsSL https://get.docker.com -o get-docker.sh
+chmod +x ./get-docker.sh
 sudo sh ./get-docker.sh
 sudo usermod -aG docker $USER
 newgrp docker
