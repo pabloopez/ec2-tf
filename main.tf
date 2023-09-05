@@ -15,7 +15,7 @@ provider "aws" {
 
 module "compute" {
   source               = "./module/compute"
-  ami                  = "ami-01e8fbda99c153c6b"
+  ami                  = "ami-06142e9168d7fe5a9"
   instance_type        = "m4.xlarge"
   tag_name             = "my_host"
   sg                   = module.security.webserver_sg
