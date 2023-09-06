@@ -132,3 +132,5 @@ kubectl apply -f manifest.yaml -n frontend
 # debug with ctr + logs
 # sudo ctr -n k8s.io containers list
 # sudo cat /var/log/pods/
+
+touch /home/ubuntu/userdataDONE
