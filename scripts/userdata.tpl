@@ -127,7 +127,7 @@ EOF'
 sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest.yaml
 
 kubectl create ns frontend
-kubectl apply -f manifest.yaml -n frontend
+kubectl apply -f /home/ubuntu/manifest.yaml -n frontend
 
 # debug with ctr + logs
 # sudo ctr -n k8s.io containers list
