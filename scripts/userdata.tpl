@@ -1,131 +1,128 @@
 # #!/bin/bash
 
-# # sudo hostnamectl set-hostname "control-plane"
+sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
 
-# sudo modprobe overlay
-# sudo modprobe br_netfilter
-# cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
-# overlay
-# br_netfilter
-# EOF
-# cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
-# net.bridge.bridge-nf-call-iptables  = 1
-# net.bridge.bridge-nf-call-ip6tables = 1
-# net.ipv4.ip_forward                 = 1
-# EOF
-# sudo sysctl --system
-# sudo swapoff -a
+sudo apt update -y 
+sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
 
-# sudo apt-get update -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update -y && sudo apt install containerd.io -y
 
-# sudo apt-get install -y apt-transport-https gnupg ca-certificates curl
-# sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
-# echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-# sudo apt-key adv --keyserver packages.cloud.google.com --recv-keys B53DC80D13EDEF05
+sudo tee /etc/apt/sources.list.d/kubernetes.list<<EOL
+deb http://apt.kubernetes.io/ kubernetes-xenial main
+EOL
 
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt update -y
 
-# curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key 
-# sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+sudo apt install -y kubectl kubelet kubeadm kubernetes-cni
+sudo swapoff -a
+sudo sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
 
+sudo tee /etc/modules-load.d/containerd.conf <<EOF
+overlay
+br_netfilter
+EOF
 
+sudo modprobe overlay
+sudo modprobe br_netfilter
 
-# curl -fsSL https://get.docker.com -o get-docker.sh
-# chmod +x ./get-docker.sh
-# sh ./get-docker.sh
-# usermod -aG docker admin
-# usermod -aG docker root
-# usermod -aG docker $USER
-# newgrp docker
+sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward                 = 1
+EOF
+# net.ipv6.conf.all.disable_ipv6 = 0
+# net.ipv6.conf.default.disable_ipv6 = 0
+sudo sysctl --system
 
+sudo mkdir -p /etc/containerd
+sudo containerd config default | sudo tee /etc/containerd/config.toml
+sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
+sudo service containerd restart
+sudo service kubelet restart  
+# sudo systemctl status containerd
+sudo systemctl enable kubelet
 
+sudo kubeadm config images pull
+sudo sysctl -p
+sudo kubeadm init \
+  --pod-network-cidr=192.168.0.0/16 \
+  --apiserver-advertise-address=0.0.0.0 \
+  --cri-socket unix:///run/containerd/containerd.sock
+#   --control-plane-endpoint=$(hostname -i | xargs -n1) \
 
-# sudo curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-# echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-# apt-get update -y
-# apt-get install -y kubelet kubeadm kubectl
-# apt-mark hold kubelet kubeadm kubectl
+kubectl taint nodes --all node.kubernetes.io/not-ready-
+kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
+# CNI
+VERSION=v3.26.1
+curl -O https://raw.githubusercontent.com/projectcalico/calico/${VERSION}/manifests/tigera-operator.yaml
+curl -O https://raw.githubusercontent.com/projectcalico/calico/${VERSION}/manifests/custom-resources.yaml 
+kubectl create -f tigera-operator.yaml
+kubectl create -f custom-resources.yaml
 
+# autocomplete https://kubernetes.io/es/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/
+sudo echo 'source <(kubectl completion bash)' >>~/.bashrc
+sudo su -c 'kubectl completion bash >/etc/bash_completion.d/kubectl'
+sudo echo 'alias k=kubectl' >>~/.bashrc
+sudo echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
+source .bashrc
 
+# deply vuln app
+sudo su -c 'cat <<-"EOF" > /home/ubuntu/manifest.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: frontend
+  name: frontend
+  namespace: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: mateobur/tomcat-front:cyberdyne
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+  namespace: frontend
+spec:
+  selector:
+    app: frontend
+  type: LoadBalancer
+  externalIPs:
+  - nodeipnode
+  ports:
+   - port: 8082
+     targetPort: 8080
+EOF'
 
-# #Turn Off Swap Space
-# swapoff -a
-# apt-get install docker.io -y
-# usermod -aG docker admim
-# usermod -aG docker root
-# systemctl restart docker
-# systemctl enable docker.service
-# apt-get install -y kubelet kubeadm kubectl kubernetes-cni
+sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" manifest.yaml
 
-# systemctl daemon-reload
-# systemctl start kubelet
-# systemctl enable kubelet.service
+kubectl create ns frontend
+kubectl apply -f manifest.yaml -n frontend
 
-# kubeadm init
-
-# swapoff -a
-# cat >>/etc/modules-load.d/containerd.conf<<EOF
-# overlay
-# br_netfilter
-# EOF
-# modprobe overlay
-# modprobe br_netfilter
-
-# # Add Kernel settings
-# cat >>/etc/sysctl.d/kubernetes.conf<<EOF
-# net.bridge.bridge-nf-call-ip6tables = 1
-# net.bridge.bridge-nf-call-iptables  = 1
-# net.ipv4.ip_forward                 = 1
-# EOF
-# sysctl --system >/dev/null 2>&1
-
-# # sed -i 's/127.0.0.1 localhost/127.0.0.1 localhost master/' /etc/hosts
-
-# # apt-get update && apt install docker.io -y
-# # 
-
-# # 
-# # 
-
-
-# # kubeadm init --pod-network-cidr=192.168.0.0/16
-
-# # export KUBECONFIG=/etc/kubernetes/admin.conf
-
-# # kubectl taint nodes $(hostname) node-role.kubernetes.io/master:NoSchedule-
-
-# # kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml 
-# # kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
-
-# # sudo su
-# # apt -y update && apt -y upgrade 
-# # # (if we want, at this step is where we need to setup the ec2 hosts as k8s nodes)
-
-# # #setup machine with docker + compose
-# # cd /home/admin/
-
-
-# # #install jupyter (vuln app), maybe change later with log4j in a k8s cluster
-# # DIR=/home/admin/jupyter
-# # mkdir $DIR
-# # wget https://raw.githubusercontent.com/vulhub/vulhub/master/jupyter/notebook-rce/docker-compose.yml -P $DIR
-# # docker compose -f $DIR/docker-compose.yml up -d
-
-
-# # # agent
-# # docker run -d --name sysdig-agent --restart always --privileged --net host --pid host \
-# #     -e ACCESS_KEY \
-# #     -e COLLECTOR=ingest-us2.app.sysdig.com \
-# #     -e SECURE=true \
-# #     -v /var/run/docker.sock:/host/var/run/docker.sock \
-# #     -v /dev:/host/dev \
-# #     -v /proc:/host/proc:ro \
-# #     -v /boot:/host/boot:ro \
-# #     -v /lib/modules:/host/lib/modules:ro \
-# #     -v /usr:/host/usr:ro \
-# #     -v /etc:/host/etc:ro \
-# #     --shm-size=512m \
-# #     quay.io/sysdig/agent
-
-# # touch DONE
+# debug with ctr + logs
+# sudo ctr -n k8s.io containers list
+# sudo cat /var/log/pods/
