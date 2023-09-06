@@ -1,4 +1,4 @@
-# #!/bin/bash
+#!/bin/bash
 
 sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
 
