@@ -50,12 +50,15 @@ sudo sysctl -p
 sudo kubeadm init \
   --pod-network-cidr=192.168.0.0/16 \
   --apiserver-advertise-address=0.0.0.0 \
-  --cri-socket unix:///run/containerd/containerd.sock
+  --cri-socket unix:///run/containerd/containerd.sock && echo "KUBEINIT COMPLETED"
 #   --control-plane-endpoint=$(hostname -i | xargs -n1) \
 
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+# mkdir -p $HOME/.kube
+# sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+# sudo chown $(id -u):$(id -g) $HOME/.kube/config
+mkdir -p /home/ubuntu/.kube
+sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
+sudo chown 1000:1000 /home/ubuntu/.kube/config
 
 kubectl taint nodes --all node.kubernetes.io/not-ready-
 kubectl taint nodes --all node-role.kubernetes.io/control-plane-
@@ -68,11 +71,11 @@ kubectl create -f tigera-operator.yaml
 kubectl create -f custom-resources.yaml
 
 # autocomplete https://kubernetes.io/es/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/
-sudo echo 'source <(kubectl completion bash)' >>~/.bashrc
+sudo echo 'source <(kubectl completion bash)' >>/home/ubuntu/.bashrc
 sudo su -c 'kubectl completion bash >/etc/bash_completion.d/kubectl'
-sudo echo 'alias k=kubectl' >>~/.bashrc
-sudo echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
-source .bashrc
+sudo echo 'alias k=kubectl' >>/home/ubuntu/.bashrc
+sudo echo 'complete -o default -F __start_kubectl k' >>/home/ubuntu/.bashrc
+# source .bashrc
 
 # deply vuln app
 sudo su -c 'cat <<-"EOF" > /home/ubuntu/manifest.yaml
@@ -118,7 +121,7 @@ spec:
      targetPort: 8080
 EOF'
 
-sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" manifest.yaml
+sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest.yaml
 
 kubectl create ns frontend
 kubectl apply -f manifest.yaml -n frontend
