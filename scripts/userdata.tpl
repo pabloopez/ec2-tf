@@ -57,10 +57,13 @@ sudo kubeadm init \
 #   --control-plane-endpoint=$(hostname -i | xargs -n1) \
 
 mkdir -p /root/.kube
+mkdir -p $HOME/.kube
 mkdir -p /home/ubuntu/.kube
 sudo cp -i /etc/kubernetes/admin.conf /root/.kube/config
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
 sudo chown $(id -u):$(id -g) /root/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 sudo chown $(id -u ubuntu):$(id -g ubuntu) /home/ubuntu/.kube/config
 
 kubectl taint nodes --all node.kubernetes.io/not-ready-
