@@ -11,6 +11,12 @@ resource "aws_instance" "app_server" {
   user_data              = var.user_data
   iam_instance_profile   = var.iam_instance_profile
   key_name = aws_key_pair.my_ec2_key.key_name
+  root_block_device {
+    volume_size           = "40"
+    volume_type           = "gp2"
+    encrypted             = true
+    delete_on_termination = true
+  }
   tags = {
     Name = "${var.tag_name}instance"
   }

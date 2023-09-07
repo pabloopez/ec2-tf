@@ -1,4 +1,7 @@
 #!/bin/bash
+# debug with ctr + logs
+# sudo ctr -n k8s.io containers list
+# sudo cat /var/log/pods/
 
 sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
 
@@ -129,8 +132,10 @@ sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubun
 kubectl create ns frontend
 kubectl apply -f /home/ubuntu/manifest.yaml -n frontend
 
-# debug with ctr + logs
-# sudo ctr -n k8s.io containers list
-# sudo cat /var/log/pods/
+# helm
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+helm repo add sysdig https://charts.sysdig.com
+helm repo update
+
 
 touch /home/ubuntu/userdataDONE
