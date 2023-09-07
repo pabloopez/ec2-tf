@@ -6,7 +6,7 @@
 sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
 
 sudo apt update -y 
-sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+sudo apt install apt-transport-https ca-certificates curl software-properties-common jq -y
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -56,11 +56,11 @@ sudo kubeadm init \
   --cri-socket unix:///run/containerd/containerd.sock
 #   --control-plane-endpoint=$(hostname -i | xargs -n1) \
 
-mkdir -p $HOME/.kube
+mkdir -p /root/.kube
 mkdir -p /home/ubuntu/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo cp -i /etc/kubernetes/admin.conf /root/.kube/config
 sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+sudo chown $(id -u):$(id -g) /root/.kube/config
 sudo chown $(id -u ubuntu):$(id -g ubuntu) /home/ubuntu/.kube/config
 
 kubectl taint nodes --all node.kubernetes.io/not-ready-
