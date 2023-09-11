@@ -7,7 +7,7 @@ terraform {
   }
 
   backend "s3" { 
-    bucket = "${S3_NAME}"
+    bucket = "S3_NAME"
     key    = "infra-tfstate"
     region     = "us-east-1"
   }
