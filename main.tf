@@ -4,12 +4,12 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 4.21"
     }
+  }
 
   backend "s3" { 
     bucket = var.S3_NAME
     key    = "example_state.tfstate"
     region     = "us-east-1"
-  }
   }
 
   required_version = ">= 0.14.9"
