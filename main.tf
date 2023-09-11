@@ -4,6 +4,12 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 4.21"
     }
+
+  backend "s3" { 
+    bucket = var.S3_NAME
+    key    = "example_state.tfstate"
+    region     = "us-east-1"
+  }
   }
 
   required_version = ">= 0.14.9"
@@ -59,3 +65,14 @@ module "s3" {
   object_key    = "LUIT"
   object_source = "/dev/null"
 }
+
+# resource "aws_db_instance" "clients-db" {
+#   allocated_storage    = 10
+#   db_name              = "mydb"
+#   engine               = "mysql"
+#   engine_version       = "5.7"
+#   instance_class       = "db.t3.micro"
+#   username             = "foo"
+#   password             = "foobarbaz"
+#   skip_final_snapshot  = true
+# }
