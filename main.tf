@@ -23,7 +23,7 @@ module "compute" {
   source               = "./module/compute"
   ami                  = "ami-0408adfcef670a71e"
   instance_type        = "m4.xlarge"
-  tag_name             = "my_host"
+  tag_name             = "EC2_NAME"
   sg                   = module.security.webserver_sg
   user_data            = file("./scripts/userdata.tpl")
   iam_instance_profile = module.iam.s3_profile

@@ -18,7 +18,7 @@ resource "aws_instance" "app_server" {
     delete_on_termination = true
   }
   tags = {
-    Name = "${var.tag_name}instance"
+    Name = "${var.tag_name}"
   }
 }
 

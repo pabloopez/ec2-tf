@@ -107,7 +107,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: mateobur/tomcat-front:cyberdyne
+          image: sysdigtraining/tomcat-front:cyberdyne-1.9
           ports:
             - containerPort: 8080
               protocol: TCP
