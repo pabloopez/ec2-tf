@@ -36,7 +36,7 @@ module "security" {
 
 module "iam" {
   source                 = "./module/iam"
-  role_name              = "ec2-role"
+  role_name              = "EC2_ROLE_NAME"
   instance_profile_name  = "ec2-instance-profile"
   assume_role_policy     = file("./policy/ec2-trusted-id.tpl")
 
