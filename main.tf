@@ -23,7 +23,7 @@ module "compute" {
   source               = "./module/compute"
   ami                  = "ami-0408adfcef670a71e"
   instance_type        = "m4.xlarge"
-  tag_name             = "EC2_NAME"
+  tag_name             = "ec2-EC2_NAME"
   sg                   = module.security.webserver_sg
   user_data            = file("./scripts/userdata.tpl")
   iam_instance_profile = module.iam.s3_profile
@@ -36,7 +36,7 @@ module "security" {
 
 module "iam" {
   source                 = "./module/iam"
-  role_name              = "EC2_ROLE_NAME"
+  role_name              = "ec2-role-EC2_ROLE_NAME"
   instance_profile_name  = "ec2-instance-profile"
   assume_role_policy     = file("./policy/ec2-trusted-id.tpl")
 
