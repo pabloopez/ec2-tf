@@ -30,6 +30,18 @@ module "compute" {
   public_key_path      = "~/.ssh/my_sshkey.pub"
 }
 
+module "compute-attacker" {
+  source               = "./module/compute"
+  ami                  = "ami-0408adfcef670a71e"
+  instance_type        = "m4.xlarge"
+  tag_name             = "ec2-attacker-EC2_NAME"
+  sg                   = module.security.webserver_sg
+  user_data            = file("./scripts/userdata_attacker.tpl")
+  iam_instance_profile = module.iam.s3_profile
+  public_key_path      = "~/.ssh/my_sshkey.pub"
+}
+
+
 module "security" {
   source = "./module/security"
 }
