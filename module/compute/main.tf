@@ -1,6 +1,6 @@
 # ------- module/main.tf
 resource "aws_key_pair" "my_ec2_key" {
-  key_name   = "my-ec2-key"
+  key_name   = var.public_key_name
   public_key = file(var.public_key_path)
 }
 

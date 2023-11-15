@@ -27,6 +27,7 @@ module "compute" {
   sg                   = module.security.webserver_sg
   user_data            = file("./scripts/userdata.tpl")
   iam_instance_profile = module.iam.s3_profile
+  public_key_name      = "my-ec2-key"
   public_key_path      = "~/.ssh/my_sshkey.pub"
 }
 
@@ -38,7 +39,8 @@ module "compute-attacker" {
   sg                   = module.security.webserver_sg
   user_data            = file("./scripts/userdata_attacker.tpl")
   iam_instance_profile = module.iam.s3_profile
-  public_key_path      = "~/.ssh/my_sshkey.pub"
+  public_key_name      = "my-ec2-attacker-key"
+  public_key_path      = "~/.ssh/my_sshkey_attacker.pub"
 }
 
 
