@@ -128,7 +128,7 @@ spec:
   ports:
    - name: http
      protocol: TCP
-     port: 8082
+     port: 80
      targetPort: 8080
 EOF'
 
