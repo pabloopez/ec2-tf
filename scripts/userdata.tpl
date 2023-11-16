@@ -48,16 +48,11 @@ sudo service kubelet restart
 # sudo systemctl status containerd
 sudo systemctl enable kubelet
 
-
-# apiServerExtraArgs:
-#   service-node-port-range: 80-32767
-
 sudo kubeadm config images pull
 sudo sysctl -p
 sudo kubeadm init \
   --pod-network-cidr=192.168.0.0/16 \
   --apiserver-advertise-address=0.0.0.0 \
-  --apiServerExtraArgs="service-node-port-range: 80-32767" \
   --cri-socket unix:///run/containerd/containerd.sock
 #   --control-plane-endpoint=$(hostname -i | xargs -n1) \
 
