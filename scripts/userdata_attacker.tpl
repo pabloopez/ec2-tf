@@ -16,7 +16,7 @@ deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOL
 sudo apt update -y
 
-sudo apt install -y apt-transport-https ca-certificates curl software-properties-common jq python3-pip nmap kubectl unzip
+sudo apt install -y apt-transport-https ca-certificates curl niktosoftware-properties-common jq python3-pip nmap kubectl unzip
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"

@@ -107,7 +107,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: sysdigtraining/tomcat-front:cyberdyne-1.9
+          image: sysdigtraining/tomcat-front:cyberdyne-1.8
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -130,11 +130,46 @@ spec:
      protocol: TCP
      port: 80
      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: legacy-webapp
+  name: legacy-webapp
+  namespace: legacy-webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: legacy-webapp
+  template:
+    metadata:
+      labels:
+        app: legacy-webapp
+    spec:
+      containers:
+        - name: legacy-webapp
+          image: sysdigtraining/erp:legacy-1.9
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+---
+spec:
+  selector:
+    app: legacy-webapp
+  type: LoadBalancer
+  externalIPs:
+  - nodeipnode
+  ports:
+   - port: 8082
+     targetPort: 8080
 EOF'
 
 sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest.yaml
 
 kubectl create ns frontend
+kubectl create ns legacy-webapp
 kubectl apply -f /home/ubuntu/manifest.yaml -n frontend
 
 # helm
