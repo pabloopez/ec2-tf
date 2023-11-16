@@ -155,6 +155,13 @@ spec:
             - containerPort: 8080
               protocol: TCP
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: legacy-webapp
+  labels:
+    app: legacy-webapp
+  namespace: legacy-webapp
 spec:
   selector:
     app: legacy-webapp
