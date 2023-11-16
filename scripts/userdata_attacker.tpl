@@ -36,10 +36,10 @@ cat << EOF > /home/ubuntu/resources/aws_creds.json
 EOF
 
 # # setup rootkit for the exploit
-cd /home/ubuntu/
-git clone https://github.com/craig/SpringCore0day.git
-cd SpringCore0day
-pip3 install requests
+# cd /home/ubuntu/
+# git clone https://github.com/craig/SpringCore0day.git
+# cd SpringCore0day
+# pip3 install requests
 
 # # install pacu
 # cd /home/ubuntu/
