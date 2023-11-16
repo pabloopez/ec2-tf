@@ -130,7 +130,9 @@ spec:
      protocol: TCP
      port: 80
      targetPort: 8080
----
+EOF'
+
+sudo su -c 'cat <<-"EOF" > /home/ubuntu/manifest-legacy.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -178,6 +180,7 @@ sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubun
 kubectl create ns frontend
 kubectl create ns legacy-webapp
 kubectl apply -f /home/ubuntu/manifest.yaml -n frontend
+kubectl apply -f /home/ubuntu/manifest-legacy.yaml -n legacy-webapp
 
 # helm
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
