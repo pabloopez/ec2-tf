@@ -176,6 +176,7 @@ spec:
 EOF'
 
 sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest.yaml
+sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest-legacy.yaml
 
 kubectl create ns frontend
 kubectl create ns legacy-webapp
