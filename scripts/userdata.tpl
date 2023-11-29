@@ -58,11 +58,10 @@ sudo kubeadm init \
   --pod-network-cidr=192.168.0.0/16 \
   --apiserver-advertise-address=0.0.0.0 \
   --cri-socket unix:///run/containerd/containerd.sock
-#   --control-plane-endpoint=$(hostname -i | xargs -n1) \
 
-mkdir -p /root/.kube
-mkdir -p $HOME/.kube
-mkdir -p /home/ubuntu/.kube
+sudo mkdir -p /root/.kube
+sudo mkdir -p $HOME/.kube
+sudo mkdir -p /home/ubuntu/.kube
 sudo cp -i /etc/kubernetes/admin.conf /root/.kube/config
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
@@ -192,8 +191,8 @@ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bas
 helm repo add sysdig https://charts.sysdig.com
 helm repo update
 
-nohup sudo kubectl port-forward svc/frontend -n frontend --address 0.0.0.0 80 &> /dev/null &
-nohup sudo kubectl port-forward svc/legacy-webapp -n legacy-webapp --address 0.0.0.0 8082 &> /dev/null &
+sudo nohup sudo kubectl port-forward svc/frontend -n frontend --address 0.0.0.0 80 &> /dev/null &
+sudo nohup sudo kubectl port-forward svc/legacy-webapp -n legacy-webapp --address 0.0.0.0 8082 &> /dev/null &
 
 
 # icon and hostname
@@ -203,5 +202,11 @@ source ~/.bashrc
 
 # remove welcome message
 sudo sed -i "/^session[[:space:]]\+optional[[:space:]]\+pam_motd.so/ s/^/#/" /etc/pam.d/sshd && sudo systemctl restart ssh
+
+sudo cat <<\EOF >> /home/ubuntu/.profile
+enable -n exit
+enable -n enable
+trap '' 2
+EOF
 
 touch /home/ubuntu/userdataDONE
