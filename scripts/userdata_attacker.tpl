@@ -5,8 +5,6 @@
 
 set -euxo pipefail
 
-exit 0
-
 sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
 # avoid apt promt
 sudo sed -i "s/'i'/'a'/g" /etc/needrestart/needrestart.conf

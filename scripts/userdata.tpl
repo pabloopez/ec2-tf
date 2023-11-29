@@ -3,10 +3,7 @@
 # sudo ctr -n k8s.io containers list
 # sudo cat /var/log/pods/
 
-
 set -euxo pipefail
-
-exit 0
 
 sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
 
