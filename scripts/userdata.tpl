@@ -197,16 +197,16 @@ sudo nohup sudo kubectl port-forward svc/legacy-webapp -n legacy-webapp --addres
 
 # icon and hostname
 cp ~/.bashrc ~/.bashrc.backup
-echo "export PS1='🛡️ \[\e]0;\u@\h: \w\a\]\[\033[01;32m\]\u@k8s-operator\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$'" >> ~/.bashrc
+echo "PS1='🛡️ \[\e]0;\u@\h: \w\a\]\[\033[01;32m\]operator@k8s\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '" >> ~/.bashrc
 source ~/.bashrc
 
 # remove welcome message
 sudo sed -i "/^session[[:space:]]\+optional[[:space:]]\+pam_motd.so/ s/^/#/" /etc/pam.d/sshd && sudo systemctl restart ssh
 
-# sudo cat <<\EOF >> /home/ubuntu/.profile
-# enable -n exit
-# enable -n enable
-# trap '' 2
-# EOF
+sudo cat <<\EOF >> /home/ubuntu/.profile
+enable -n exit
+enable -n enable
+trap '' 2
+EOF
 
 touch /home/ubuntu/userdataDONE
