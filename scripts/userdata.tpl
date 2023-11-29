@@ -59,13 +59,13 @@ sudo kubeadm init \
   --apiserver-advertise-address=0.0.0.0 \
   --cri-socket unix:///run/containerd/containerd.sock
 
-sudo mkdir -p /root/.kube
+# sudo mkdir -p /root/.kube
 sudo mkdir -p $HOME/.kube
 sudo mkdir -p /home/ubuntu/.kube
-sudo cp -i /etc/kubernetes/admin.conf /root/.kube/config
+# sudo cp -i /etc/kubernetes/admin.conf /root/.kube/config
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
-sudo chown $(id -u):$(id -g) /root/.kube/config
+#sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
+#sudo chown $(id -u):$(id -g) /root/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 sudo chown $(id -u ubuntu):$(id -g ubuntu) /home/ubuntu/.kube/config
 
