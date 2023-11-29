@@ -55,10 +55,10 @@ source ~/.bashrc
 # remove welcome message
 sudo sed -i "/^session[[:space:]]\+optional[[:space:]]\+pam_motd.so/ s/^/#/" /etc/pam.d/sshd && sudo systemctl restart ssh
 
-sudo cat <<\EOF >> /home/ubuntu/.profile
-enable -n exit
-enable -n enable
-trap '' 2
-EOF
+# sudo cat <<\EOF >> /home/ubuntu/.profile
+# enable -n exit
+# enable -n enable
+# trap '' 2
+# EOF
 
 touch /home/ubuntu/userdataDONE
