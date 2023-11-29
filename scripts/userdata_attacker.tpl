@@ -6,7 +6,7 @@
 set -euxo pipefail
 
 sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
-# avoid promt
+# avoid apt promt
 sudo sed -i "s/'i'/'a'/g" /etc/needrestart/needrestart.conf
 
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -14,13 +14,10 @@ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 sudo tee /etc/apt/sources.list.d/kubernetes.list<<EOL
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOL
+
 sudo apt update -y
 
-sudo apt install -y apt-transport-https ca-certificates curl niktosoftware-properties-common jq python3-pip nmap kubectl unzip
-
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-sudo apt update -y && sudo apt install containerd.io -y
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common jq python3-pip nmap kubectl unzip
 
 pip uninstall awscli -y
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -40,7 +37,6 @@ EOF
 # git clone https://github.com/craig/SpringCore0day.git
 # cd SpringCore0day
 # pip3 install requests
-
 # # install pacu
 # cd /home/ubuntu/
 # git clone https://github.com/RhinoSecurityLabs/pacu.git
@@ -49,3 +45,8 @@ EOF
 # pip3 install -U chalice
 # pip3 install pyopenssl --upgrade
 # pip3 install -U pacu
+
+# icon
+cp ~/.bashrc ~/.bashrc.backup
+echo "export PS1='🦠 '\$PS1" >> ~/.bashrc
+source ~/.bashrc

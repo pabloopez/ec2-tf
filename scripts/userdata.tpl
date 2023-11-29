@@ -3,6 +3,9 @@
 # sudo ctr -n k8s.io containers list
 # sudo cat /var/log/pods/
 
+
+set -euxo pipefail
+
 sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
 
 sudo apt update -y 
