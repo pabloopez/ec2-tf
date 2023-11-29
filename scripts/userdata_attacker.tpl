@@ -15,6 +15,7 @@ sudo tee /etc/apt/sources.list.d/kubernetes.list<<EOL
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOL
 
+export DEBIAN_FRONTEND=noninteractive
 sudo apt update -y
 
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common jq python3-pip nmap kubectl unzip

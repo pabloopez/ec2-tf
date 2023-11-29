@@ -7,6 +7,7 @@ set -euxo pipefail
 
 sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
 
+export DEBIAN_FRONTEND=noninteractive
 sudo apt update -y 
 sudo apt install apt-transport-https ca-certificates curl software-properties-common jq -y
 
