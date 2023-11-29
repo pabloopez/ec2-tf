@@ -197,8 +197,7 @@ nohup sudo kubectl port-forward svc/legacy-webapp -n legacy-webapp --address 0.0
 
 # icon and hostname
 cp ~/.bashrc ~/.bashrc.backup
-echo "export PS1='🛡️ \[\e]0;\u@\h: \w\a\]\[\033[01;32m\]\u@attacker\[\033[00m\]:
-\[\033[01;34m\]\w\[\033[00m\]\$'" >> ~/.bashrc
+echo "export PS1='🛡️ \[\e]0;\u@\h: \w\a\]\[\033[01;32m\]\u@k8s-operator\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$'" >> ~/.bashrc
 source ~/.bashrc
 
 # remove welcome message
