@@ -197,9 +197,13 @@ nohup sudo kubectl port-forward svc/frontend -n frontend --address 0.0.0.0 80 &>
 nohup sudo kubectl port-forward svc/legacy-webapp -n legacy-webapp --address 0.0.0.0 8082 &> /dev/null &
 
 
-
+# icon and hostname
 cp ~/.bashrc ~/.bashrc.backup
-echo "export PS1='🦠 '\$PS1" >> ~/.bashrc
+echo "export PS1='🛡️ \[\e]0;\u@\h: \w\a\]\[\033[01;32m\]\u@attacker\[\033[00m\]:
+\[\033[01;34m\]\w\[\033[00m\]\$'" >> ~/.bashrc
 source ~/.bashrc
+
+# remove welcome message
+sudo sed -i "/^session[[:space:]]\+optional[[:space:]]\+pam_motd.so/ s/^/#/" /etc/pam.d/sshd && sudo systemctl restart ssh
 
 touch /home/ubuntu/userdataDONE
