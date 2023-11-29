@@ -48,5 +48,8 @@ EOF
 
 # icon
 cp ~/.bashrc ~/.bashrc.backup
-echo "export PS1='🦠 '\$PS1" >> ~/.bashrc
+echo "export PS1='🛡️ '\$PS1" >> ~/.bashrc
 source ~/.bashrc
+
+
+touch /home/ubuntu/userdataDONE

@@ -194,4 +194,10 @@ helm repo update
 nohup sudo kubectl port-forward svc/frontend -n frontend --address 0.0.0.0 80 &> /dev/null &
 nohup sudo kubectl port-forward svc/legacy-webapp -n legacy-webapp --address 0.0.0.0 8082 &> /dev/null &
 
+
+
+cp ~/.bashrc ~/.bashrc.backup
+echo "export PS1='🦠 '\$PS1" >> ~/.bashrc
+source ~/.bashrc
+
 touch /home/ubuntu/userdataDONE
