@@ -13,7 +13,8 @@ sudo apt install apt-transport-https ca-certificates curl software-properties-co
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-sudo apt update -y && sudo apt install containerd.io -y
+sudo apt update -y
+sudo apt install -y containerd.io
 
 sudo tee /etc/apt/sources.list.d/kubernetes.list<<EOL
 deb http://apt.kubernetes.io/ kubernetes-xenial main
