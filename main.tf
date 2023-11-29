@@ -22,7 +22,7 @@ provider "aws" {
 module "compute" {
   source               = "./module/compute"
   ami                  = "ami-0408adfcef670a71e"
-  instance_type        = "m4.xlarge"
+  instance_type        = "m5.xlarge"
   tag_name             = "ec2-EC2_NAME"
   sg                   = module.security.webserver_sg
   user_data            = file("./scripts/userdata.tpl")
@@ -34,7 +34,7 @@ module "compute" {
 module "compute-attacker" {
   source               = "./module/compute"
   ami                  = "ami-0408adfcef670a71e"
-  instance_type        = "m4.xlarge"
+  instance_type        = "m5.xlarge"
   tag_name             = "ec2-attacker-EC2_NAME"
   sg                   = module.security.webserver_sg
   user_data            = file("./scripts/userdata_attacker.tpl")
