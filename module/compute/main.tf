@@ -13,7 +13,7 @@ resource "aws_instance" "app_server" {
   key_name = aws_key_pair.my_ec2_key.key_name
   root_block_device {
     volume_size           = "30"
-    volume_type           = "gp2"
+    volume_type           = "gp3"
     encrypted             = true
     delete_on_termination = true
   }
