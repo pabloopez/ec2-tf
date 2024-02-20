@@ -181,10 +181,10 @@ EOF'
 sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest.yaml
 sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest-legacy.yaml
 
-kubectl create ns frontend
-kubectl create ns legacy-webapp
-kubectl apply -f /home/ubuntu/manifest.yaml -n frontend
-kubectl apply -f /home/ubuntu/manifest-legacy.yaml -n legacy-webapp
+# kubectl create ns frontend
+# kubectl create ns legacy-webapp
+# kubectl apply -f /home/ubuntu/manifest.yaml -n frontend
+# kubectl apply -f /home/ubuntu/manifest-legacy.yaml -n legacy-webapp
 
 # helm
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
