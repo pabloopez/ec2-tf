@@ -22,13 +22,27 @@ provider "aws" {
 module "compute" {
   source               = "./module/compute"
   ami                  = "ami-0408adfcef670a71e"
-  instance_type        = "m4.xlarge"
+  instance_type        = "m5.xlarge"
   tag_name             = "ec2-EC2_NAME"
   sg                   = module.security.webserver_sg
   user_data            = file("./scripts/userdata.tpl")
   iam_instance_profile = module.iam.s3_profile
+  public_key_name      = "my-ec2-key"
   public_key_path      = "~/.ssh/my_sshkey.pub"
 }
+
+module "compute-attacker" {
+  source               = "./module/compute"
+  ami                  = "ami-0408adfcef670a71e"
+  instance_type        = "m5.xlarge"
+  tag_name             = "ec2-attacker-EC2_NAME"
+  sg                   = module.security.webserver_sg
+  user_data            = file("./scripts/userdata_attacker.tpl")
+  iam_instance_profile = module.iam.s3_profile
+  public_key_name      = "my-ec2-attacker-key"
+  public_key_path      = "~/.ssh/my_sshkey_attacker.pub"
+}
+
 
 module "security" {
   source = "./module/security"

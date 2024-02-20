@@ -22,3 +22,7 @@ variable "iam_instance_profile" {
 variable "public_key_path" {
   description = "Path to the public SSH key"
 }
+
+variable "public_key_name" {
+  description = "Name of the public SSH key"
+}

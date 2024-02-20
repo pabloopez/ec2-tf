@@ -3,14 +3,18 @@
 # sudo ctr -n k8s.io containers list
 # sudo cat /var/log/pods/
 
+set -euxo pipefail
+
 sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
 
+export DEBIAN_FRONTEND=noninteractive
 sudo apt update -y 
 sudo apt install apt-transport-https ca-certificates curl software-properties-common jq -y
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-sudo apt update -y && sudo apt install containerd.io -y
+sudo apt update -y
+sudo apt install -y containerd.io
 
 sudo tee /etc/apt/sources.list.d/kubernetes.list<<EOL
 deb http://apt.kubernetes.io/ kubernetes-xenial main
@@ -54,16 +58,15 @@ sudo kubeadm init \
   --pod-network-cidr=192.168.0.0/16 \
   --apiserver-advertise-address=0.0.0.0 \
   --cri-socket unix:///run/containerd/containerd.sock
-#   --control-plane-endpoint=$(hostname -i | xargs -n1) \
 
-mkdir -p /root/.kube
-mkdir -p $HOME/.kube
-mkdir -p /home/ubuntu/.kube
-sudo cp -i /etc/kubernetes/admin.conf /root/.kube/config
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+# sudo mkdir -p /root/.kube
+sudo mkdir -p /home/ubuntu/.kube
+sudo mkdir -p /home/ubuntu/.kube
+# sudo cp -i /etc/kubernetes/admin.conf /root/.kube/config
 sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
-sudo chown $(id -u):$(id -g) /root/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+#sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
+#sudo chown $(id -u):$(id -g) /root/.kube/config
+sudo chown $(id -u):$(id -g) /home/ubuntu/.kube/config
 sudo chown $(id -u ubuntu):$(id -g ubuntu) /home/ubuntu/.kube/config
 
 kubectl taint nodes --all node.kubernetes.io/not-ready-
@@ -107,7 +110,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: sysdigtraining/tomcat-front:cyberdyne-1.9
+          image: sysdigtraining/tomcat-front:cyberdyne-1.8
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -126,19 +129,87 @@ spec:
   externalIPs:
   - nodeipnode
   ports:
+   - name: http
+     protocol: TCP
+     port: 80
+     targetPort: 8080
+EOF'
+
+sudo su -c 'cat <<-"EOF" > /home/ubuntu/manifest-legacy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: legacy-webapp
+  name: legacy-webapp
+  namespace: legacy-webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: legacy-webapp
+  template:
+    metadata:
+      labels:
+        app: legacy-webapp
+    spec:
+      containers:
+        - name: legacy-webapp
+          image: sysdigtraining/erp:legacy-1.9
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: legacy-webapp
+  labels:
+    app: legacy-webapp
+  namespace: legacy-webapp
+spec:
+  selector:
+    app: legacy-webapp
+  type: LoadBalancer
+  externalIPs:
+  - nodeipnode
+  ports:
    - port: 8082
      targetPort: 8080
 EOF'
 
 sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest.yaml
+sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest-legacy.yaml
 
-kubectl create ns frontend
-kubectl apply -f /home/ubuntu/manifest.yaml -n frontend
+# kubectl create ns frontend
+# kubectl create ns legacy-webapp
+# kubectl apply -f /home/ubuntu/manifest.yaml -n frontend
+# kubectl apply -f /home/ubuntu/manifest-legacy.yaml -n legacy-webapp
 
 # helm
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 helm repo add sysdig https://charts.sysdig.com
 helm repo update
 
+touch /home/ubuntu/userdataDONE
+exit 0
+
+# sudo nohup sudo kubectl port-forward svc/frontend -n frontend --address 0.0.0.0 80 &> /dev/null &
+# sudo nohup sudo kubectl port-forward svc/legacy-webapp -n legacy-webapp --address 0.0.0.0 8082 &> /dev/null &
+
+
+# icon and hostname
+cp ~/.bashrc ~/.bashrc.backup
+echo "PS1='🛡️ \[\e]0;\u@\h: \w\a\]\[\033[01;32m\]operator@k8s\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '" >> ~/.bashrc
+source ~/.bashrc
+
+# remove welcome message
+sudo sed -i "/^session[[:space:]]\+optional[[:space:]]\+pam_motd.so/ s/^/#/" /etc/pam.d/sshd && sudo systemctl restart ssh
+
+sudo cat <<\EOF >> /home/ubuntu/.profile
+enable -n exit
+enable -n enable
+trap '' 2
+EOF
 
 touch /home/ubuntu/userdataDONE
