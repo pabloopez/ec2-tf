@@ -1,29 +1,29 @@
 #!/bin/bash
 # debug with ctr + logs
-# sudo ctr -n k8s.io containers list
-# sudo cat /var/log/pods/
+# ctr -n k8s.io containers list
+# cat /var/log/pods/
 
 set -euxo pipefail
 
-sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
+echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts
 # avoid apt promt
-sudo sed -i "s/'i'/'a'/g" /etc/needrestart/needrestart.conf
+sed -i "s/'i'/'a'/g" /etc/needrestart/needrestart.conf
 
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 
-sudo tee /etc/apt/sources.list.d/kubernetes.list<<EOL
+tee /etc/apt/sources.list.d/kubernetes.list<<EOL
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOL
 
 export DEBIAN_FRONTEND=noninteractive
-sudo apt update -y
+apt update -y
 
-sudo apt install -y apt-transport-https ca-certificates curl software-properties-common jq python3-pip nmap kubectl unzip
+apt install -y apt-transport-https ca-certificates curl software-properties-common jq python3-pip nmap kubectl unzip
 
 pip uninstall awscli -y
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip &> /dev/null
-sudo ./aws/install &> /dev/null
+./aws/install &> /dev/null
 hash  -r
 rm -rf /home/ubuntu/awscliv2.zip /home/ubuntu/aws
 
@@ -48,14 +48,16 @@ EOF
 # pip3 install -U pacu
 
 # icon and hostname
-cp ~/.bashrc ~/.bashrc.backup
-echo "export PS1='🦠 \[\e]0;\u@\h: \w\a\]\[\033[01;32m\]attacker@host\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '" >> ~/.bashrc
-source ~/.bashrc
+set +u
+cp /home/ubuntu/.bashrc /home/ubuntu/.bashrc.backup
+echo "PS1='🦠 \[\e]0;\u@\h: \w\a\]\[\033[01;32m\]attacker@host\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '" >> /home/ubuntu/.bashrc
+source /home/ubuntu/.bashrc
+set -u
 
 # remove welcome message
-sudo sed -i "/^session[[:space:]]\+optional[[:space:]]\+pam_motd.so/ s/^/#/" /etc/pam.d/sshd && sudo systemctl restart ssh
+sed -i "/^session[[:space:]]\+optional[[:space:]]\+pam_motd.so/ s/^/#/" /etc/pam.d/sshd && sudo systemctl restart ssh
 
-sudo cat <<\EOF >> /home/ubuntu/.profile
+cat <<\EOF >> /home/ubuntu/.profile
 enable -n exit
 enable -n enable
 trap '' 2
