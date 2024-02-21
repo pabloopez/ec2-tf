@@ -188,9 +188,6 @@ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bas
 helm repo add sysdig https://charts.sysdig.com
 helm repo update
 
-touch /home/ubuntu/userdataDONE
-exit 0
-
 # sudo nohup sudo kubectl port-forward svc/frontend -n frontend --address 0.0.0.0 80 &> /dev/null &
 # sudo nohup sudo kubectl port-forward svc/legacy-webapp -n legacy-webapp --address 0.0.0.0 8082 &> /dev/null &
 
