@@ -5,79 +5,74 @@
 
 set -euxo pipefail
 
-
-whoami
-
-sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
+echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts
 
 export DEBIAN_FRONTEND=noninteractive
-sudo apt update -y 
-sudo apt install apt-transport-https ca-certificates curl software-properties-common jq -y
+apt update -y 
+apt install apt-transport-https ca-certificates curl software-properties-common jq -y
 
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-sudo apt update -y
-sudo apt install -y containerd.io
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+apt update -y
+apt install -y containerd.io
 
-sudo tee /etc/apt/sources.list.d/kubernetes.list<<EOL
+tee /etc/apt/sources.list.d/kubernetes.list<<EOL
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOL
 
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo apt update -y
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+apt update -y
 
-sudo apt install -y kubectl kubelet kubeadm kubernetes-cni
-sudo swapoff -a
-sudo sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
+apt install -y kubectl kubelet kubeadm kubernetes-cni
+swapoff -a
+sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
 
-sudo tee /etc/modules-load.d/containerd.conf <<EOF
+tee /etc/modules-load.d/containerd.conf <<EOF
 overlay
 br_netfilter
 EOF
 
-sudo modprobe overlay
-sudo modprobe br_netfilter
+modprobe overlay
+modprobe br_netfilter
 
-sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
+tee /etc/sysctl.d/kubernetes.conf<<EOF
 net.bridge.bridge-nf-call-iptables  = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 net.ipv4.ip_forward                 = 1
 EOF
 # net.ipv6.conf.all.disable_ipv6 = 0
 # net.ipv6.conf.default.disable_ipv6 = 0
-sudo sysctl --system
+sysctl --system
 
-sudo mkdir -p /etc/containerd
-sudo containerd config default | sudo tee /etc/containerd/config.toml
-sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
-sudo service containerd restart
-sudo service kubelet restart  
-# sudo systemctl status containerd
-sudo systemctl enable kubelet
+mkdir -p /etc/containerd
+containerd config default | tee /etc/containerd/config.toml
+sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
+service containerd restart
+service kubelet restart  
+# systemctl status containerd
+systemctl enable kubelet
 
-sudo kubeadm config images pull
-sudo sysctl -p
-sudo kubeadm init \
+kubeadm config images pull
+sysctl -p
+kubeadm init \
   --pod-network-cidr=192.168.0.0/16 \
   --apiserver-advertise-address=0.0.0.0 \
   --cri-socket unix:///run/containerd/containerd.sock
 
-mkdir -p /root/.kube
-mkdir -p /home/ubuntu/.kube
-sudo cp -i /etc/kubernetes/admin.conf /root/.kube/config
-sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
-sudo chown $(id -u):$(id -g) /root/.kube/config
-sudo chown $(id -u ubuntu):$(id -g ubuntu) /home/ubuntu/.kube/config
 
-kubectl taint nodes --all node.kubernetes.io/not-ready-
-kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+mkdir -p /home/ubuntu/.kube
+cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
+chown $(id -u ubuntu):$(id -g ubuntu) /home/ubuntu/.kube/config
+
+sudo -E -u ubuntu kubectl taint nodes --all node.kubernetes.io/not-ready-
+sudo -E -u ubuntu kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
 # CNI
 VERSION=v3.26.1
 curl -O https://raw.githubusercontent.com/projectcalico/calico/${VERSION}/manifests/tigera-operator.yaml
 curl -O https://raw.githubusercontent.com/projectcalico/calico/${VERSION}/manifests/custom-resources.yaml 
-kubectl create -f tigera-operator.yaml
-kubectl create -f custom-resources.yaml
+sudo -E -u ubuntu kubectl create -f tigera-operator.yaml
+sudo -E -u ubuntu kubectl create -f custom-resources.yaml
 
 # autocomplete https://kubernetes.io/es/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/
 sudo echo 'source <(kubectl completion bash)' >> ~/.bashrc
@@ -178,8 +173,8 @@ spec:
      targetPort: 8080
 EOF'
 
-sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest.yaml
-sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest-legacy.yaml
+sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest.yaml
+sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest-legacy.yaml
 
 # kubectl create ns frontend
 # kubectl create ns legacy-webapp
@@ -191,8 +186,8 @@ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bas
 helm repo add sysdig https://charts.sysdig.com
 helm repo update
 
-# sudo nohup sudo kubectl port-forward svc/frontend -n frontend --address 0.0.0.0 80 &> /dev/null &
-# sudo nohup sudo kubectl port-forward svc/legacy-webapp -n legacy-webapp --address 0.0.0.0 8082 &> /dev/null &
+# nohup kubectl port-forward svc/frontend -n frontend --address 0.0.0.0 80 &> /dev/null &
+# nohup kubectl port-forward svc/legacy-webapp -n legacy-webapp --address 0.0.0.0 8082 &> /dev/null &
 
 
 # icon and hostname
