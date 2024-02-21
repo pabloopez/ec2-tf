@@ -64,6 +64,11 @@ mkdir -p /home/ubuntu/.kube
 cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
 chown $(id -u ubuntu):$(id -g ubuntu) /home/ubuntu/.kube/config
 
+mkdir -p /root/.kube
+cp -i /etc/kubernetes/admin.conf /root/.kube/config
+chown $(id -u ubuntu):$(id -g ubuntu) /root/.kube/config
+source /root/.kube
+
 sudo -E -u ubuntu kubectl taint nodes --all node.kubernetes.io/not-ready-
 sudo -E -u ubuntu kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
