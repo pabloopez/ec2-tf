@@ -193,9 +193,9 @@ helm repo update
 
 # icon and hostname
 set +u
-cp ~/.bashrc ~/.bashrc.backup
-echo "PS1='🛡️ \[\e]0;\u@\h: \w\a\]\[\033[01;32m\]operator@k8s\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '" >> ~/.bashrc
-source ~/.bashrc
+cp /home/ubuntu/.bashrc /home/ubuntu/.bashrc.backup
+echo "PS1='🛡️ \[\e]0;\u@\h: \w\a\]\[\033[01;32m\]operator@k8s\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '" >> /home/ubuntu/.bashrc
+source /home/ubuntu/.bashrc
 set -u
 
 # remove welcome message
