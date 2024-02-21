@@ -5,6 +5,9 @@
 
 set -euxo pipefail
 
+
+whoami
+
 sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
 
 export DEBIAN_FRONTEND=noninteractive
