@@ -192,9 +192,11 @@ helm repo update
 
 
 # icon and hostname
+set +u
 cp ~/.bashrc ~/.bashrc.backup
 echo "PS1='🛡️ \[\e]0;\u@\h: \w\a\]\[\033[01;32m\]operator@k8s\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '" >> ~/.bashrc
 source ~/.bashrc
+set -u
 
 # remove welcome message
 sudo sed -i "/^session[[:space:]]\+optional[[:space:]]\+pam_motd.so/ s/^/#/" /etc/pam.d/sshd && sudo systemctl restart ssh
