@@ -12,7 +12,7 @@ sed -i "s/'i'/'a'/g" /etc/needrestart/needrestart.conf
 export DEBIAN_FRONTEND=noninteractive
 apt update -y
 
-apt install -y apt-transport-https ca-certificates curl software-properties-common jq python3-pip nmap kubectl unzip
+apt install -y apt-transport-https ca-certificates curl software-properties-common jq python3-pip nmap unzip
 
 pip uninstall awscli -y
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
