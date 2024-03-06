@@ -9,12 +9,6 @@ echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts
 # avoid apt promt
 sed -i "s/'i'/'a'/g" /etc/needrestart/needrestart.conf
 
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-
-tee /etc/apt/sources.list.d/kubernetes.list<<EOL
-deb http://apt.kubernetes.io/ kubernetes-xenial main
-EOL
-
 export DEBIAN_FRONTEND=noninteractive
 apt update -y
 
