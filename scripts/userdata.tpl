@@ -17,10 +17,10 @@ apt update -y
 apt install -y containerd.io
 
 tee /etc/apt/sources.list.d/kubernetes.list<<EOL
-deb http://apt.kubernetes.io/ kubernetes-xenial main
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/
 EOL
 
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 apt update -y
 
 apt install -y kubectl kubelet kubeadm kubernetes-cni
