@@ -40,10 +40,10 @@ overlay
 br_netfilter
 EOF
 
-sudo modprobe overlay
-sudo modprobe br_netfilter
+modprobe overlay
+modprobe br_netfilter
 
-sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
+tee /etc/sysctl.d/kubernetes.conf<<EOF
 net.bridge.bridge-nf-call-iptables  = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 net.ipv4.ip_forward                 = 1
@@ -52,13 +52,13 @@ EOF
 # net.ipv6.conf.default.disable_ipv6 = 0
 sudo sysctl --system
 
-sudo mkdir -p /etc/containerd
-sudo containerd config default | sudo tee /etc/containerd/config.toml
-sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
-sudo service containerd restart
-sudo service kubelet restart  
-# sudo systemctl status containerd
-sudo systemctl enable kubelet
+mkdir -p /etc/containerd
+containerd config default | sudo tee /etc/containerd/config.toml
+sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
+service containerd restart
+service kubelet restart  
+# systemctl status containerd
+systemctl enable kubelet
 
 kubeadm config images pull
 sysctl -p
