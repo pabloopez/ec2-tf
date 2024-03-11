@@ -3,27 +3,39 @@
 # sudo ctr -n k8s.io containers list
 # sudo cat /var/log/pods/
 
-sudo su -c 'echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts'
+set -euxo pipefail
 
-sudo apt update -y 
-sudo apt install apt-transport-https ca-certificates curl software-properties-common jq -y
+echo $(hostname -i | xargs -n1) $(hostname) >> /etc/hosts
 
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-sudo apt update -y && sudo apt install containerd.io -y
+export DEBIAN_FRONTEND=noninteractive
+apt update -y 
+apt install apt-transport-https ca-certificates curl software-properties-common jq -y
 
-sudo tee /etc/apt/sources.list.d/kubernetes.list<<EOL
-deb http://apt.kubernetes.io/ kubernetes-xenial main
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+apt update -y
+apt install -y containerd.io
+
+tee /etc/apt/sources.list.d/kubernetes.list<<EOL
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /
 EOL
 
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo apt update -y
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+apt update -y
 
-sudo apt install -y kubectl kubelet kubeadm kubernetes-cni
-sudo swapoff -a
-sudo sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
+apt install -y kubectl kubelet kubeadm kubernetes-cni
+swapoff -a
+sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
 
-sudo tee /etc/modules-load.d/containerd.conf <<EOF
+tee /etc/modules-load.d/containerd.conf <<EOF
 overlay
 br_netfilter
 EOF
