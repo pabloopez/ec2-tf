@@ -60,23 +60,19 @@ sudo service kubelet restart
 # sudo systemctl status containerd
 sudo systemctl enable kubelet
 
-sudo kubeadm config images pull
-sudo sysctl -p
-sudo kubeadm init \
+kubeadm config images pull
+sysctl -p
+kubeadm init \
   --pod-network-cidr=192.168.0.0/16 \
   --apiserver-advertise-address=0.0.0.0 \
   --cri-socket unix:///run/containerd/containerd.sock
-#   --control-plane-endpoint=$(hostname -i | xargs -n1) \
 
-mkdir -p /root/.kube
-mkdir -p $HOME/.kube
+
 mkdir -p /home/ubuntu/.kube
-sudo cp -i /etc/kubernetes/admin.conf /root/.kube/config
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
-sudo chown $(id -u):$(id -g) /root/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-sudo chown $(id -u ubuntu):$(id -g ubuntu) /home/ubuntu/.kube/config
+cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
+chown $(id -u ubuntu):$(id -g ubuntu) /home/ubuntu/.kube/config
+chmod 644 /home/ubuntu/.kube/config
+export KUBECONFIG=/home/ubuntu/.kube/config
 
 kubectl taint nodes --all node.kubernetes.io/not-ready-
 kubectl taint nodes --all node-role.kubernetes.io/control-plane-
