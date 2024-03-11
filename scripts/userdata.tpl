@@ -74,15 +74,15 @@ chown $(id -u ubuntu):$(id -g ubuntu) /home/ubuntu/.kube/config
 chmod 644 /home/ubuntu/.kube/config
 export KUBECONFIG=/home/ubuntu/.kube/config
 
-kubectl taint nodes --all node.kubernetes.io/not-ready-
-kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+sudo -E -u ubuntu kubectl taint nodes --all node.kubernetes.io/not-ready-
+sudo -E -u ubuntu kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
 # CNI
 VERSION=v3.26.1
 curl -O https://raw.githubusercontent.com/projectcalico/calico/${VERSION}/manifests/tigera-operator.yaml
 curl -O https://raw.githubusercontent.com/projectcalico/calico/${VERSION}/manifests/custom-resources.yaml 
-kubectl create -f tigera-operator.yaml
-kubectl create -f custom-resources.yaml
+sudo -E -u ubuntu kubectl create -f tigera-operator.yaml
+sudo -E -u ubuntu kubectl create -f custom-resources.yaml
 
 # autocomplete https://kubernetes.io/es/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/
 sudo echo 'source <(kubectl completion bash)' >> ~/.bashrc
@@ -137,10 +137,10 @@ spec:
      targetPort: 8080
 EOF'
 
-sudo sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest.yaml
+sed -i "s/nodeipnode/$(curl -s http://whatismyip.akamai.com/)/g" /home/ubuntu/manifest.yaml
 
-kubectl create ns frontend
-kubectl apply -f /home/ubuntu/manifest.yaml -n frontend
+sudo -E -u ubuntu kubectl create ns frontend
+sudo -E -u ubuntu kubectl apply -f /home/ubuntu/manifest.yaml -n frontend
 
 # helm
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
