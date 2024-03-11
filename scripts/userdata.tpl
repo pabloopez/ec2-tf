@@ -92,7 +92,6 @@ sudo echo 'alias k=kubectl' >> ~/.bashrc
 sudo echo 'alias k=kubectl' >> /home/ubuntu/.bashrc
 sudo echo 'complete -o default -F __start_kubectl k' >> ~/.bashrc
 sudo echo 'complete -o default -F __start_kubectl k' >> /home/ubuntu/.bashrc
-source .bashrc
 
 # deply vuln app
 sudo su -c 'cat <<-"EOF" > /home/ubuntu/manifest.yaml
