@@ -14,16 +14,14 @@ apt update -y
 
 apt install -y apt-transport-https ca-certificates curl software-properties-common jq python3-pip nmap unzip
 
-pip uninstall awscli -y
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip &> /dev/null
-./aws/install &> /dev/null
-hash  -r
-rm -rf /home/ubuntu/awscliv2.zip /home/ubuntu/aws
-
-# pip3 install -U chalice
-# pip3 install pyopenssl --upgrade
-# pip3 install -U pacu
+sudo su -l ubuntu -c '
+  pip uninstall awscli -y
+  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  unzip awscliv2.zip &> /dev/null
+  ./aws/install &> /dev/null
+  hash  -r
+  rm -rf /home/ubuntu/awscliv2.zip /home/ubuntu/aws
+'
 
 # icon and hostname
 set +u
