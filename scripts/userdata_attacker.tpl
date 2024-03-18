@@ -21,8 +21,8 @@ unzip awscliv2.zip &> /dev/null
 hash  -r
 rm -rf /home/ubuntu/awscliv2.zip /home/ubuntu/aws
 
-# pip3 install -U chalice
-# pip3 install pyopenssl --upgrade
+pip3 install -U chalice
+pip3 install pyopenssl --upgrade
 # pip3 install -U pacu
 
 # icon and hostname
