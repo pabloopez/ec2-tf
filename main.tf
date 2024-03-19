@@ -9,14 +9,14 @@ terraform {
   backend "s3" { 
     bucket = "S3_NAME"
     key    = "infra-tfstate"
-    region     = "us-east-1"
+    region     = "	us-west-2"
   }
 
   required_version = ">= 0.14.9"
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "	us-west-2"
 }
 
 module "compute" {
