@@ -22,6 +22,8 @@ sudo su -l ubuntu -c '
   hash  -r
   rm -rf /home/ubuntu/awscliv2.zip /home/ubuntu/aws
   echo "alias aws='/usr/local/bin/aws'" >> /home/ubuntu/.bashrc
+  echo "alias pacu='cd /home/ubuntu/pacu && ./cli.py'" >> /home/ubuntu/.bashrc
+  pip3 install pyopenssl --upgrade
 '
 
 # icon and hostname
