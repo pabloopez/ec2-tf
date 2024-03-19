@@ -21,6 +21,7 @@ sudo su -l ubuntu -c '
   sudo ./aws/install
   hash  -r
   rm -rf /home/ubuntu/awscliv2.zip /home/ubuntu/aws
+  echo "alias aws='/usr/local/bin/aws'" >> /home/ubuntu/.bashrc
 '
 
 # icon and hostname
