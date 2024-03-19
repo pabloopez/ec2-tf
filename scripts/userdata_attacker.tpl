@@ -18,7 +18,7 @@ sudo su -l ubuntu -c '
   pip uninstall awscli -y
   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
   unzip awscliv2.zip &> /dev/null
-  ./aws/install &> /dev/null
+  sudo ./aws/install
   hash  -r
   rm -rf /home/ubuntu/awscliv2.zip /home/ubuntu/aws
 '
